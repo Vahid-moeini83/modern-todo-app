@@ -1,26 +1,367 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Base */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+
+  /* Brand & Status */
+  --color-primary-900: var(--primary-900);
+  --color-primary-700: var(--primary-700);
+  --color-primary-500: var(--primary-500);
+  --color-primary-100: var(--primary-100);
+  --color-warning-900: var(--warning-900);
+  --color-warning-500: var(--warning-500);
+  --color-warning-100: var(--warning-100);
+  --color-success-600: var(--success-600);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 0.625rem;
+
+  /* Base (Light) */
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --border: #e5e7eb;
+  --ring: #94a3b8;
+  --input: #e5e7eb;
+
+  /* Primary (Light) */
+  --primary-900: #2f80ed; /* hover */
+  --primary-700: #3a8dff;
+  --primary-500: #a7c7ff;
+  --primary-100: #e6f0ff;
+
+  /* Warning (Light) */
+  --warning-900: #b08900;
+  --warning-500: #f2c94c;
+  --warning-100: #fff4cc;
+
+  /* Success (Light) */
+  --success-600: #27ae60;
+}
+
+.dark {
+  /* Base (Dark) */
+  --background: #0b1224;
+  --foreground: #e5e7f5;
+  --border: #1f2937;
+  --ring: #334155;
+  --input: #1f2937;
+
+  /* Primary (Dark) */
+  --primary-900: #101b3d;
+  --primary-700: #2b3f80;
+  --primary-500: #4c8dff;
+  --primary-300: #1e5eff; /* hover */
+
+  /* Warning (Dark) */
+  --warning-900: #332800;
+  --warning-700: #8a6a00;
+  --warning-500: #f5c542;
+
+  /* Success (Dark) */
+  --success-500: #2dd18a;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+/* React Multi Date Picker Custom Styles */
+.custom-date-picker .rmdp-container {
+  width: 100%;
+}
+
+.custom-date-picker .rmdp-input {
+  width: 100% !important;
+  height: 2.5rem !important;
+  padding: 0.5rem 0.75rem !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid var(--input) !important;
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  font-size: 0.875rem !important;
+  transition: all 0.2s !important;
+}
+
+.custom-date-picker .rmdp-input:focus {
+  outline: none !important;
+  ring: 2px !important;
+  ring-color: var(--ring) !important;
+  ring-offset: 2px !important;
+  border-color: var(--ring) !important;
+}
+
+.custom-date-picker .rmdp-input::placeholder {
+  color: var(--foreground) !important;
+  opacity: 0.5 !important;
+}
+
+/* Calendar Popup Styles */
+.rmdp-calendar {
+  background-color: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  font-family: var(--font-sans) !important;
+}
+
+.rmdp-header {
+  background-color: var(--background) !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 0.75rem 0.75rem 0 0 !important;
+  padding: 1rem !important;
+}
+
+.rmdp-header-values {
+  color: var(--foreground) !important;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  cursor: pointer !important;
+  transition: color 0.2s !important;
+}
+
+.rmdp-header-values:hover {
+  color: var(--primary-700) !important;
+}
+
+.dark .rmdp-header-values:hover {
+  color: var(--primary-500) !important;
+}
+
+.rmdp-arrow-container {
+  background-color: transparent !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.375rem !important;
+  transition: all 0.2s !important;
+}
+
+.rmdp-arrow-container:hover {
+  background-color: var(--primary-100) !important;
+  border-color: var(--primary-500) !important;
+}
+
+.dark .rmdp-arrow-container:hover {
+  background-color: var(--primary-900) !important;
+}
+
+.rmdp-arrow {
+  border-color: var(--foreground) !important;
+}
+
+/* Week Days */
+.rmdp-week-day {
+  color: var(--foreground) !important;
+  opacity: 0.7 !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+}
+
+/* Calendar Days */
+.rmdp-day {
+  color: var(--foreground) !important;
+  border-radius: 50% !important;
+  transition: all 0.2s !important;
+  font-weight: 500 !important;
+  border: none !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.rmdp-day:hover {
+  background-color: var(--primary-100) !important;
+  color: var(--primary-700) !important;
+  transform: scale(1.1) !important;
+}
+
+.dark .rmdp-day:hover {
+  background-color: var(--primary-900) !important;
+  color: var(--primary-500) !important;
+}
+
+.rmdp-day.rmdp-selected {
+  background-color: var(--primary-700) !important;
+  color: white !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.rmdp-day.rmdp-today {
+  background-color: var(--primary-500) !important;
+  color: var(--primary-700) !important;
+  font-weight: 600 !important;
+  border: 2px solid var(--primary-700) !important;
+}
+
+.dark .rmdp-day.rmdp-today {
+  background-color: var(--primary-700) !important;
+  color: var(--primary-500) !important;
+  border: 2px solid var(--primary-500) !important;
+}
+
+.rmdp-day.rmdp-disabled {
+  color: var(--foreground) !important;
+  opacity: 0.3 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.rmdp-day.rmdp-disabled:hover {
+  transform: none !important;
+  background-color: transparent !important;
+}
+
+/* Calendar Grid Spacing */
+.rmdp-day-picker {
+  padding: 1rem !important;
+}
+
+.rmdp-week {
+  margin-bottom: 0.25rem !important;
+}
+
+/* Selected Day Animation */
+.rmdp-day.rmdp-selected {
+  animation: selectPulse 0.3s ease-out !important;
+}
+
+@keyframes selectPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1.1);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Month and Year Selectors */
+.rmdp-month-picker,
+.rmdp-year-picker {
+  background-color: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.75rem !important;
+}
+
+.rmdp-month,
+.rmdp-year {
+  color: var(--foreground) !important;
+  border-radius: 0.375rem !important;
+  transition: all 0.2s !important;
+}
+
+.rmdp-month:hover,
+.rmdp-year:hover {
+  background-color: var(--primary-100) !important;
+  color: var(--primary-700) !important;
+}
+
+.dark .rmdp-month:hover,
+.dark .rmdp-year:hover {
+  background-color: var(--primary-900) !important;
+  color: var(--primary-500) !important;
+}
+
+.rmdp-month.rmdp-selected,
+.rmdp-year.rmdp-selected {
+  background-color: var(--primary-700) !important;
+  color: white !important;
+}
+
+/* Arrow Styles */
+.rmdp-left,
+.rmdp-right {
+  border-color: var(--foreground) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .rmdp-calendar {
+    width: 280px !important;
+  }
+}
+/* Custom Calendar Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.calendar-fade-in {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.calendar-slide-left {
+  animation: slideInLeft 0.4s ease-out;
+}
+
+.calendar-slide-right {
+  animation: slideInRight 0.4s ease-out;
+}
+/* Today's date special animation */
+@keyframes todayPulse {
+  0%,
+  100% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 0 rgba(251, 146, 60, 0.7);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 10px rgba(251, 146, 60, 0);
+  }
+}
+
+.today-pulse {
+  animation: todayPulse 2s infinite;
 }
