@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { usePublicStore } from "@/app/store/publicStore";
 
-const Calendar = ({ onDaySelect }) => {
+const Calendar = () => {
+  const router = useRouter();
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [animationDirection, setAnimationDirection] = useState("");
-  const { hasTasksForDate, getTaskStatsByPriority, openModal } =
-    usePublicStore();
+  const { hasTasksForDate, getTaskStatsByPriority } = usePublicStore();
 
   // Helper functions
   const formatDate = (date) => {
@@ -43,17 +43,11 @@ const Calendar = ({ onDaySelect }) => {
   };
 
   const navigateMonth = (direction) => {
-    setAnimationDirection(
-      direction > 0 ? "calendar-slide-right" : "calendar-slide-left"
-    );
     setCurrentDate((prev) => {
       const newDate = new Date(prev);
       newDate.setMonth(prev.getMonth() + direction);
       return newDate;
     });
-
-    // Reset animation after it completes
-    setTimeout(() => setAnimationDirection(""), 400);
   };
 
   const handleDayClick = (day) => {
@@ -64,13 +58,8 @@ const Calendar = ({ onDaySelect }) => {
     );
     const dateStr = formatDate(selectedDate);
 
-    // Call onDaySelect if provided (for viewing tasks)
-    if (onDaySelect) {
-      onDaySelect(dateStr);
-    }
-
-    // Open modal for adding task
-    openModal(dateStr);
+    // Navigate to day detail page
+    router.push(`/day/${dateStr}`);
   };
 
   // Generate calendar days
@@ -80,85 +69,116 @@ const Calendar = ({ onDaySelect }) => {
 
   // Empty cells for days before the first day of month
   for (let i = 0; i < firstDayOfMonth; i++) {
-    days.push(null);
+    days.push({ day: null, index: i });
   }
 
   // Days of the month
   for (let day = 1; day <= daysInMonth; day++) {
-    days.push(day);
+    days.push({ day, index: firstDayOfMonth + day - 1 });
   }
 
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <div className="w-full mx-auto bg-linear-to-br from-background to-primary-100/20 dark:to-primary-900/10 border border-border/50 rounded-2xl shadow-lg backdrop-blur-sm p-6 md:p-10">
-      {/* Calendar Header */}
-      <div className="flex items-center justify-between mb-8">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigateMonth(-1)}
-          className="hover:bg-primary-100 dark:hover:bg-primary-900 h-12 w-12 rounded-full transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </Button>
+    <div className="w-full mx-auto space-y-6">
+      {/* Priority Legend */}
+      <div className="bg-white dark:bg-gray-800 border border-border/50 rounded-xl shadow-sm p-4 md:p-6">
+        <h3 className="text-sm md:text-base font-semibold text-foreground/80 mb-3">
+          Task Priority Legend
+        </h3>
+        <div className="flex flex-wrap gap-4 md:gap-6">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 md:w-4 md:h-4 bg-red-600 rounded-full shadow-sm"></div>
+            <span className="text-xs md:text-sm text-foreground/70">
+              High Priority Tasks
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 md:w-4 md:h-4 bg-yellow-600 rounded-full shadow-sm"></div>
+            <span className="text-xs md:text-sm text-foreground/70">
+              Medium Priority Tasks
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 md:w-4 md:h-4 bg-blue-600 rounded-full shadow-sm"></div>
+            <span className="text-xs md:text-sm text-foreground/70">
+              Low Priority Tasks
+            </span>
+          </div>
+        </div>
+      </div>
 
-        <div className="text-center">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-linear-to-r from-primary-700 to-primary-500 bg-clip-text text-transparent">
-            {getMonthName(currentDate)}
-          </h2>
+      {/* Calendar Container */}
+      <div className="bg-linear-to-br from-background to-primary-100/20 dark:to-primary-900/10 border border-border/50 rounded-2xl shadow-lg backdrop-blur-sm p-6 md:p-10">
+        {/* Calendar Header */}
+        <div className="flex items-center justify-between mb-8">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigateMonth(-1)}
+            className="hover:bg-primary-100 dark:hover:bg-primary-900 h-12 w-12 rounded-full transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </Button>
+
+          <div className="text-center">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-linear-to-r from-primary-700 to-primary-500 bg-clip-text text-transparent">
+              {getMonthName(currentDate)}
+            </h2>
+          </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigateMonth(1)}
+            className="hover:bg-primary-100 dark:hover:bg-primary-900 h-12 w-12 rounded-full transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </Button>
         </div>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigateMonth(1)}
-          className="hover:bg-primary-100 dark:hover:bg-primary-900 h-12 w-12 rounded-full transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </Button>
-      </div>
-
-      {/* Week Days Header */}
-      <div className="grid grid-cols-7 gap-2 md:gap-4 mb-6">
-        {weekDays.map((day) => (
-          <div
-            key={day}
-            className="h-12 md:h-14 flex items-center justify-center text-sm md:text-base font-semibold text-foreground/80 bg-primary-50 dark:bg-primary-900/20 rounded-lg"
-          >
-            {day}
-          </div>
-        ))}
-      </div>
-
-      {/* Calendar Grid - Fixed height to prevent jumping */}
-      <div
-        className={`grid grid-cols-7 gap-2 md:gap-4 min-h-[300px] md:min-h-[400px] lg:min-h-[480px] ${animationDirection}`}
-      >
-        {days.map((day, index) => {
-          if (day === null) {
-            return <div key={index} className="h-12 md:h-16 lg:h-20" />;
-          }
-
-          const dateStr = formatDate(
-            new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
-          );
-          const hasTasks = hasTasksForDate(dateStr);
-          const taskStats = getTaskStatsByPriority(dateStr);
-          const todayClass = isToday(currentDate, day);
-
-          // Priority colors configuration
-          const priorityConfig = {
-            high: { bg: "bg-red-600", text: "text-white" },
-            medium: { bg: "bg-yellow-600", text: "text-white" },
-            low: { bg: "bg-blue-600", text: "text-white" },
-          };
-
-          return (
-            <button
+        {/* Week Days Header */}
+        <div className="grid grid-cols-7 gap-2 md:gap-4 mb-6">
+          {weekDays.map((day) => (
+            <div
               key={day}
-              onClick={() => handleDayClick(day)}
-              className={`
+              className="h-12 md:h-14 flex items-center justify-center text-sm md:text-base font-semibold text-foreground/80 bg-primary-50 dark:bg-primary-900/20 rounded-lg"
+            >
+              {day}
+            </div>
+          ))}
+        </div>
+
+        {/* Calendar Grid - Fixed height to prevent jumping */}
+        <div className="grid grid-cols-7 gap-2 md:gap-4 min-h-[300px] md:min-h-[400px] lg:min-h-[480px]">
+          {days.map((dayObj) => {
+            const { day, index } = dayObj;
+
+            if (day === null) {
+              return (
+                <div key={`empty-${index}`} className="h-12 md:h-16 lg:h-20" />
+              );
+            }
+
+            const dateStr = formatDate(
+              new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
+            );
+            const hasTasks = hasTasksForDate(dateStr);
+            const taskStats = getTaskStatsByPriority(dateStr);
+            const todayClass = isToday(currentDate, day);
+
+            // Priority colors configuration
+            const priorityConfig = {
+              high: { bg: "bg-red-600", text: "text-white" },
+              medium: { bg: "bg-yellow-600", text: "text-white" },
+              low: { bg: "bg-blue-600", text: "text-white" },
+            };
+
+            return (
+              <button
+                key={`${currentDate.getFullYear()}-${currentDate.getMonth()}-${day}`}
+                onClick={() => handleDayClick(day)}
+                className={`
                 h-12 md:h-16 lg:h-20 rounded-xl border-2 transition-all duration-300 relative
                 hover:shadow-lg hover:scale-105 hover:-translate-y-1
                 focus:outline-none focus:ring-4 focus:ring-primary-500/30
@@ -173,48 +193,53 @@ const Calendar = ({ onDaySelect }) => {
                     : ""
                 }
               `}
-            >
-              <span
-                className={`text-sm md:text-base lg:text-lg font-semibold ${
-                  todayClass ? "drop-shadow-sm" : ""
-                }`}
               >
-                {day}
-              </span>
+                <span
+                  className={`text-sm md:text-base lg:text-lg font-semibold ${
+                    todayClass ? "drop-shadow-sm" : ""
+                  }`}
+                >
+                  {day}
+                </span>
 
-              {/* Priority Task Indicators */}
-              {hasTasks && (
-                <div className="absolute bottom-1 left-1 right-1 flex gap-0.5 md:gap-1 justify-center">
-                  {["high", "medium", "low"].map((priority) => {
-                    const count = taskStats[priority];
-                    if (count === 0) return null;
+                {/* Priority Task Indicators - Left Side Vertical */}
+                {hasTasks && (
+                  <div className="absolute left-1 bottom-1 flex flex-col gap-0.5 md:gap-1">
+                    {["high", "medium", "low"].map((priority) => {
+                      const count = taskStats[priority];
+                      if (count === 0) return null;
 
-                    const config = priorityConfig[priority];
-                    return (
-                      <div
-                        key={priority}
-                        className={`
+                      const config = priorityConfig[priority];
+                      return (
+                        <div
+                          key={priority}
+                          className={`
                           ${config.bg} ${config.text} 
-                          text-xs font-bold rounded-full 
-                          w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6
-                          flex items-center justify-center 
-                          shadow-md transition-all duration-200
+                          rounded-full shadow-sm transition-all duration-200
                           hover:scale-110 border border-white/20
                           ${todayClass ? "ring-1 ring-white/50" : ""}
+                          
+                          // Mobile: Just dots
+                          w-2 h-2 md:w-4 md:h-4 lg:w-5 lg:h-5
+                          md:flex md:items-center md:justify-center
                         `}
-                        title={`${count} ${priority} priority task${
-                          count > 1 ? "s" : ""
-                        }`}
-                      >
-                        <span className="text-xs lg:text-sm">{count}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </button>
-          );
-        })}
+                          title={`${count} ${priority} priority task${
+                            count > 1 ? "s" : ""
+                          }`}
+                        >
+                          {/* Show count only on medium screens and up */}
+                          <span className="hidden md:block text-xs lg:text-sm font-bold">
+                            {count}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

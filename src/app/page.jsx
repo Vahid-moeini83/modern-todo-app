@@ -1,14 +1,14 @@
 import { MainLayout } from "@/components/layout/main-layout";
-import { TodoSection } from "@/components/modules/todo";
+import { HomeSection } from "@/components/modules/home";
 
 /**
- * Home Page - Main project page
+ * Home Page - Main landing page
  * SSR-first approach
  */
 export default function Home() {
   return (
     <MainLayout>
-      <TodoSection />
+      <HomeSection />
     </MainLayout>
   );
 }

@@ -1,15 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Calendar as CalendarIcon, Plus, Flag } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, Flag, Eye } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/date-picker";
 import { usePublicStore } from "@/app/store/publicStore";
 
-const TaskModal = () => {
-  const { isModalOpen, selectedDate, closeModal, addTask } = usePublicStore();
+const TaskModal = ({ hideViewDayButton = false }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { isModalOpen, selectedDate, closeModal, addTask, hasTasksForDate } =
+    usePublicStore();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -46,8 +50,30 @@ const TaskModal = () => {
       priority: formData.priority,
     };
 
+    // Add task to store (will be persisted to localStorage automatically)
     addTask(formData.date, task);
+
+    // Close modal
     closeModal();
+
+    // Check if we're already on a day page
+    const isOnDayPage = pathname?.startsWith("/day/");
+    const currentDayPage = pathname?.replace("/day/", "");
+
+    if (isOnDayPage && currentDayPage === formData.date) {
+      // We're already on the correct day page, no need to navigate
+      // The page will update automatically due to Zustand reactivity
+      return;
+    }
+
+    // Navigate to the day page for the task's date
+    router.push(`/day/${formData.date}`);
+  };
+
+  const handleViewDay = () => {
+    const targetDate = selectedDate || formData.date;
+    closeModal();
+    router.push(`/day/${targetDate}`);
   };
 
   const handleInputChange = (field, value) => {
@@ -202,23 +228,39 @@ const TaskModal = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3 pt-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={closeModal}
-            className="flex-1"
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            className="flex-1 flex items-center gap-2"
-            disabled={!formData.title.trim()}
-          >
-            <Plus className="w-4 h-4" />
-            Add Task
-          </Button>
+        <div className="flex flex-col gap-3">
+          <div className="flex gap-3 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={closeModal}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+
+            <Button
+              type="submit"
+              className="flex-1 flex items-center gap-2"
+              disabled={!formData.title.trim()}
+            >
+              <Plus className="w-4 h-4" />
+              Add Task
+            </Button>
+          </div>
+          {/* View Day Button - Show only if date has tasks and not hidden by prop */}
+          {!hideViewDayButton &&
+            hasTasksForDate(selectedDate || formData.date) && (
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={handleViewDay}
+                className="flex items-center gap-2"
+              >
+                <Eye className="w-4 h-4" />
+                View Day
+              </Button>
+            )}
         </div>
       </form>
     </Modal>

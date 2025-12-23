@@ -316,39 +316,10 @@
   }
 }
 
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 .calendar-fade-in {
   animation: fadeInUp 0.6s ease-out;
 }
 
-.calendar-slide-left {
-  animation: slideInLeft 0.4s ease-out;
-}
-
-.calendar-slide-right {
-  animation: slideInRight 0.4s ease-out;
-}
 /* Today's date special animation */
 @keyframes todayPulse {
   0%,
