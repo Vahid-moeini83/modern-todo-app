@@ -91,20 +91,23 @@ const StatisticsSection = () => {
   ];
 
   const priorityConfig = {
-    high: {
-      color: "text-red-600",
-      bgColor: "bg-red-100 dark:bg-red-900/30",
-      label: "High Priority",
+    low: {
+      color: "text-blue-600",
+      bgColor: "bg-blue-100 dark:bg-blue-900/30",
+      progressColor: "bg-blue-600 dark:bg-blue-500",
+      label: "Low Priority",
     },
     medium: {
       color: "text-yellow-600",
       bgColor: "bg-yellow-100 dark:bg-yellow-900/30",
+      progressColor: "bg-yellow-600 dark:bg-yellow-500",
       label: "Medium Priority",
     },
-    low: {
-      color: "text-blue-600",
-      bgColor: "bg-blue-100 dark:bg-blue-900/30",
-      label: "Low Priority",
+    high: {
+      color: "text-red-600",
+      bgColor: "bg-red-100 dark:bg-red-900/30",
+      progressColor: "bg-red-600 dark:bg-red-500",
+      label: "High Priority",
     },
   };
 
@@ -122,23 +125,25 @@ const StatisticsSection = () => {
         </div>
 
         {/* Main Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6 mb-8">
           {mainStats.map((stat, index) => {
             const Icon = stat.icon;
             return (
               <div
                 key={index}
-                className="bg-background border border-border rounded-xl shadow-sm p-6 hover:shadow-md transition-all duration-200"
+                className="bg-background border border-border rounded-xl shadow-sm p-4 md:p-6 hover:shadow-md transition-all duration-200"
               >
                 <div
-                  className={`w-12 h-12 ${stat.bgColor} rounded-lg flex items-center justify-center mb-4`}
+                  className={`w-10 h-10 md:w-12 md:h-12 ${stat.bgColor} rounded-lg flex items-center justify-center mb-3 md:mb-4`}
                 >
-                  <Icon className={`w-6 h-6 ${stat.color}`} />
+                  <Icon className={`w-5 h-5 md:w-6 md:h-6 ${stat.color}`} />
                 </div>
-                <div className="text-3xl font-bold text-foreground mb-1">
+                <div className="text-2xl md:text-3xl font-bold text-foreground mb-1">
                   {stat.value}
                 </div>
-                <div className="text-sm text-foreground/70">{stat.label}</div>
+                <div className="text-xs md:text-sm text-foreground/70">
+                  {stat.label}
+                </div>
               </div>
             );
           })}
@@ -260,39 +265,53 @@ const StatisticsSection = () => {
                     </h3>
                   </div>
 
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-foreground/70">Total</span>
-                      <span className={`text-xl font-bold ${config.color}`}>
-                        {total}
-                      </span>
+                  {total === 0 ? (
+                    // Empty state when no tasks
+                    <div className="py-8 text-center">
+                      <p className="text-sm text-foreground/60 ">
+                        No tasks for this priority
+                      </p>
                     </div>
+                  ) : (
+                    // Stats when tasks exist
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-foreground/70">
+                          Total
+                        </span>
+                        <span className={`text-xl font-bold ${config.color}`}>
+                          {total}
+                        </span>
+                      </div>
 
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-foreground/70">
-                        Completed
-                      </span>
-                      <span className="text-lg font-semibold text-foreground">
-                        {completed}
-                      </span>
-                    </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-foreground/70">
+                          Completed
+                        </span>
+                        <span className="text-lg font-semibold text-foreground">
+                          {completed}
+                        </span>
+                      </div>
 
-                    <div className="w-full bg-border rounded-full h-2 overflow-hidden">
-                      <div
-                        className={`h-full rounded-full transition-all duration-500 ${config.bgColor.replace(
-                          "/30",
-                          ""
-                        )}`}
-                        style={{ width: `${completionPercent}%` }}
-                      />
-                    </div>
+                      <div className="w-full bg-border rounded-full h-2 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${config.progressColor}`}
+                          style={{ width: `${completionPercent}%` }}
+                        />
+                      </div>
 
-                    <div className="text-center">
-                      <span className={`text-sm font-medium ${config.color}`}>
-                        {completionPercent}% Complete
-                      </span>
+                      <div className="text-center">
+                        <span
+                          className={`text-sm flex items-center justify-center gap-2 font-medium ${config.color}`}
+                        >
+                          {completionPercent}% Complete{" "}
+                          {completionPercent === 100 ? (
+                            <CheckCircle2 color="green" />
+                          ) : null}
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               );
             })}

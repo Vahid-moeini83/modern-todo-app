@@ -32,8 +32,8 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-6">
           <Link
             href="/"
@@ -55,8 +55,8 @@ export function Header() {
                     flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
                     ${
                       isActive
-                        ? "bg-primary-100 dark:bg-primary-900/30 text-primary-700"
-                        : "text-foreground/70 hover:text-foreground hover:bg-accent"
+                        ? "bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-500"
+                        : "text-foreground/80 dark:text-foreground/90 hover:text-foreground hover:bg-primary-100/50 dark:hover:bg-primary-900/50"
                     }
                   `}
                 >
@@ -82,8 +82,8 @@ export function Header() {
                     flex items-center justify-center h-9 w-9 rounded-md border transition-colors
                     ${
                       isActive
-                        ? "border-primary-500 bg-primary-100 dark:bg-primary-900/30 text-primary-700"
-                        : "border-border bg-background hover:bg-accent hover:text-accent-foreground"
+                        ? "border-primary-500 dark:border-primary-700 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-500"
+                        : "border-border bg-background text-foreground/80 dark:text-foreground/90 hover:bg-primary-100/50 dark:hover:bg-primary-900/50 hover:text-foreground"
                     }
                   `}
                   aria-label={link.label}
