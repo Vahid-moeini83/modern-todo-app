@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { Calendar as CalendarIcon, Plus, Flag, Edit3 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -56,6 +57,9 @@ const AddTaskSection = () => {
     };
 
     addTask(formData.date, task);
+
+    // Show success toast
+    toast.success("Task added successfully!");
 
     // Navigate to day page
     router.push(`/day/${formData.date}`);

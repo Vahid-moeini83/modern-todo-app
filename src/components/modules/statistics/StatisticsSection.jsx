@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   CheckCircle2,
   Clock,
@@ -7,11 +8,14 @@ import {
   TrendingUp,
   Calendar,
   Flag,
+  ArrowUpDown,
 } from "lucide-react";
 import { usePublicStore } from "@/app/store/publicStore";
+import { Button } from "@/components/ui/button";
 
 const StatisticsSection = () => {
   const { tasks } = usePublicStore();
+  const [sortOrder, setSortOrder] = useState("desc"); // desc = newest first, asc = oldest first
 
   // Calculate overall statistics
   const allTasks = Object.values(tasks).flat();
@@ -200,39 +204,91 @@ const StatisticsSection = () => {
             </div>
           </div>
 
-          {/* Most Productive Day */}
+          {/* Active Days List */}
           <div className="bg-background border border-border rounded-xl shadow-sm p-6 md:p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Calendar className="w-6 h-6 text-green-600" />
-              <h2 className="text-xl md:text-2xl font-bold text-foreground">
-                Productivity Insights
-              </h2>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <Calendar className="w-6 h-6 text-blue-600" />
+                <h2 className="text-xl md:text-2xl font-bold text-foreground">
+                  Active Days
+                </h2>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setSortOrder(sortOrder === "desc" ? "asc" : "desc")
+                }
+                className="flex items-center gap-2"
+              >
+                <ArrowUpDown className="w-4 h-4" />
+                {sortOrder === "desc" ? "Newest First" : "Oldest First"}
+              </Button>
             </div>
 
-            <div className="space-y-6">
-              <div>
-                <div className="text-sm text-foreground/70 mb-2">
-                  Most Productive Day
-                </div>
-                <div className="text-2xl font-bold text-foreground">
-                  {formatDate(mostProductiveDay.date)}
-                </div>
-                <div className="text-sm text-green-600 font-medium mt-1">
-                  {mostProductiveDay.count} tasks completed
-                </div>
+            <div className="space-y-4">
+              <div className="text-sm text-foreground/70 mb-4">
+                {daysWithTasks} {daysWithTasks === 1 ? "day" : "days"} with
+                scheduled tasks
               </div>
 
-              <div className="pt-4 border-t border-border">
-                <div className="text-sm text-foreground/70 mb-2">
-                  Active Days
+              {daysWithTasks > 0 ? (
+                <div className="max-h-[220px] overflow-y-auto space-y-2 pr-2">
+                  {Object.keys(tasks)
+                    .filter((date) => tasks[date].length > 0)
+                    .sort((a, b) =>
+                      sortOrder === "desc"
+                        ? new Date(b) - new Date(a)
+                        : new Date(a) - new Date(b)
+                    )
+                    .map((date) => {
+                      const dayTasks = tasks[date];
+                      const completedCount = dayTasks.filter(
+                        (t) => t.completed
+                      ).length;
+                      const dateObj = new Date(date);
+                      const formattedDate = dateObj.toLocaleDateString(
+                        "en-US",
+                        {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        }
+                      );
+
+                      return (
+                        <a
+                          key={date}
+                          href={`/day/${date}`}
+                          className="block p-3 bg-background hover:bg-primary-100 dark:hover:bg-primary-900/30 border border-border hover:border-primary-500 rounded-lg transition-all duration-200"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <div className="text-sm font-medium text-foreground">
+                                {formattedDate}
+                              </div>
+                              <div className="text-xs text-foreground/60 mt-1">
+                                {dayTasks.length}{" "}
+                                {dayTasks.length === 1 ? "task" : "tasks"} •{" "}
+                                {completedCount} completed
+                              </div>
+                            </div>
+                            <div className="text-xs font-medium text-primary-700">
+                              View →
+                            </div>
+                          </div>
+                        </a>
+                      );
+                    })}
                 </div>
-                <div className="text-2xl font-bold text-foreground">
-                  {daysWithTasks}
+              ) : (
+                <div className="text-center py-8">
+                  <Calendar className="w-12 h-12 mx-auto mb-3 text-foreground/30" />
+                  <p className="text-sm text-foreground/60">
+                    No active days yet. Start adding tasks!
+                  </p>
                 </div>
-                <div className="text-sm text-foreground/60 mt-1">
-                  Days with scheduled tasks
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

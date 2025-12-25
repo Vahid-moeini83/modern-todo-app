@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { Calendar as CalendarIcon, Plus, Flag, Eye } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { Modal } from "@/components/ui/modal";
@@ -52,6 +53,9 @@ const TaskModal = ({ hideViewDayButton = false }) => {
 
     // Add task to store (will be persisted to localStorage automatically)
     addTask(formData.date, task);
+
+    // Show success toast
+    toast.success("Task added successfully!");
 
     // Close modal
     closeModal();

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { Calendar, Plus, Filter, Check, Trash2, Flag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ConfirmModal } from "@/components/ui/modal";
@@ -57,7 +58,28 @@ const DayDetailSection = ({ date }) => {
   };
 
   const handleToggleTask = (taskId) => {
+    const task = allTasks.find((t) => t.id === taskId);
     toggleTask(date, taskId);
+
+    if (task) {
+      if (!task.completed) {
+        toast.success("Task completed!");
+
+        // Check if all tasks are completed
+        const updatedTasks = allTasks.map((t) =>
+          t.id === taskId ? { ...t, completed: true } : t
+        );
+        const allCompleted = updatedTasks.every((t) => t.completed);
+
+        if (allCompleted && updatedTasks.length > 0) {
+          setTimeout(() => {
+            toast.success("All tasks completed!");
+          }, 500);
+        }
+      } else {
+        toast("Task marked as incomplete");
+      }
+    }
   };
 
   const handleDeleteClick = (task) => {
@@ -68,7 +90,9 @@ const DayDetailSection = ({ date }) => {
   const handleConfirmDelete = () => {
     if (taskToDelete) {
       deleteTask(date, taskToDelete.id);
+      toast.error("Task deleted!");
       setTaskToDelete(null);
+      setDeleteConfirmOpen(false);
     }
   };
 
@@ -83,16 +107,19 @@ const DayDetailSection = ({ date }) => {
         color: "text-red-600",
         bgColor: "bg-red-100 dark:bg-red-900/30",
         borderColor: "border-red-200 dark:border-red-800",
+        circleColor: "bg-red-600 dark:bg-red-500",
       },
       medium: {
         color: "text-yellow-600",
         bgColor: "bg-yellow-100 dark:bg-yellow-900/30",
         borderColor: "border-yellow-200 dark:border-yellow-800",
+        circleColor: "bg-yellow-600 dark:bg-yellow-500",
       },
       low: {
         color: "text-blue-600",
         bgColor: "bg-blue-100 dark:bg-blue-900/30",
         borderColor: "border-blue-200 dark:border-blue-800",
+        circleColor: "bg-blue-600 dark:bg-blue-500",
       },
     };
     return configs[priority] || configs.medium;
@@ -350,9 +377,7 @@ const DayDetailSection = ({ date }) => {
                     >
                       <div className="flex items-center gap-2">
                         <div
-                          className={`w-3 h-3 rounded-full ${config.bgColor
-                            .replace("bg-", "bg-")
-                            .replace("/30", "")}`}
+                          className={`w-3 h-3 rounded-full ${config.circleColor}`}
                         />
                         <span className="text-foreground/70 capitalize">
                           {priority}
