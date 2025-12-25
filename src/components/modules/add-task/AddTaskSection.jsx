@@ -97,35 +97,35 @@ const AddTaskSection = () => {
   ];
 
   return (
-    <section className="w-full py-8 md:py-12">
-      <div className="container mx-auto px-4 max-w-6xl">
+    <section className="w-full py-6 md:py-8 lg:py-12">
+      <div className="container mx-auto px-3 md:px-4 max-w-6xl">
         {/* Header */}
-        <div className="text-center mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+        <div className="text-center mb-6 md:mb-8 lg:mb-12">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground mb-3 md:mb-4">
             Add New Task
           </h1>
-          <p className="text-foreground/70 text-base md:text-lg max-w-2xl mx-auto">
+          <p className="text-foreground/70 text-sm md:text-base lg:text-lg max-w-2xl mx-auto px-2">
             Select a date from the calendar or add a task manually
           </p>
         </div>
 
         {/* Manual Add Button */}
-        <div className="mb-8 text-center">
+        <div className="mb-6 md:mb-8 text-center">
           <Button
             onClick={handleManualAdd}
             className="flex items-center gap-2 mx-auto"
             size="lg"
           >
-            <Edit3 className="w-5 h-5" />
+            <Edit3 className="w-4 h-4 md:w-5 md:h-5" />
             Add Task Manually
           </Button>
         </div>
 
         {/* Manual Add Form */}
         {showManualForm && (
-          <div className="max-w-2xl mx-auto mb-8">
-            <div className="bg-background border border-border rounded-xl shadow-sm p-6 md:p-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="max-w-2xl mx-auto mb-6 md:mb-8">
+            <div className="bg-background border border-border rounded-xl shadow-sm p-4 md:p-6 lg:p-8">
+              <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                 {/* Date Picker */}
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground flex items-center gap-2">

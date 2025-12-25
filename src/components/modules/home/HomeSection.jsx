@@ -86,17 +86,17 @@ const HomeSection = () => {
   };
 
   return (
-    <section className="w-full min-h-[calc(100vh-200px)] flex items-center justify-center py-12 md:py-16">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <section className="w-full min-h-[calc(100vh-200px)] flex items-center justify-center py-6 md:py-12">
+      <div className="container mx-auto px-3 md:px-4 max-w-4xl">
         {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
+        <div className="text-center mb-8 md:mb-12">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 md:mb-6">
             Modern{" "}
             <span className="bg-linear-to-r from-primary-700 to-primary-500 bg-clip-text text-transparent">
               Todo App
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mx-auto leading-relaxed mb-12">
+          <p className="text-base md:text-lg lg:text-xl text-foreground/70 max-w-2xl mx-auto leading-relaxed mb-8 md:mb-12 px-2">
             Organize your daily tasks, track your progress, and boost your
             productivity with our intuitive task management system. Stay focused
             and achieve your goals efficiently.
@@ -106,7 +106,7 @@ const HomeSection = () => {
           <Button
             onClick={() => router.push("/add-task")}
             size="lg"
-            className="flex items-center gap-2 mx-auto text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-all duration-300"
+            className="flex items-center gap-2 mx-auto text-base md:text-lg px-6 py-5 md:px-8 md:py-6 shadow-lg hover:shadow-xl transition-all duration-300"
           >
             Manage your tasks
           </Button>
@@ -114,15 +114,15 @@ const HomeSection = () => {
 
         {/* Today's Tasks Box */}
         <div className="max-w-2xl mx-auto">
-          <div className="bg-background border border-border rounded-xl shadow-lg p-6 md:p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <Calendar className="w-6 h-6 text-primary-700" />
+          <div className="bg-background border border-border rounded-xl shadow-lg p-4 md:p-6 lg:p-8">
+            <div className="flex items-center justify-between mb-4 md:mb-6">
+              <div className="flex items-center gap-2 md:gap-3">
+                <Calendar className="w-5 h-5 md:w-6 md:h-6 text-primary-700" />
                 <div>
-                  <h2 className="text-xl md:text-2xl font-bold text-foreground">
+                  <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-foreground">
                     Today's Tasks
                   </h2>
-                  <p className="text-sm text-foreground/60 mt-1">
+                  <p className="text-xs md:text-sm text-foreground/60 mt-0.5 md:mt-1">
                     {formatTodayDate()}
                   </p>
                 </div>
@@ -130,9 +130,9 @@ const HomeSection = () => {
             </div>
 
             {todayTasks.length === 0 ? (
-              <div className="text-center py-8">
-                <Calendar className="w-12 h-12 mx-auto mb-3 text-foreground/30" />
-                <p className="text-foreground/60 mb-4">
+              <div className="text-center py-6 md:py-8">
+                <Calendar className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 text-foreground/30" />
+                <p className="text-sm md:text-base text-foreground/60 mb-3 md:mb-4">
                   No tasks scheduled for today
                 </p>
                 <Button
@@ -146,23 +146,23 @@ const HomeSection = () => {
                 </Button>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-primary-100 dark:bg-primary-900/30 rounded-lg p-3 text-center">
-                    <div className="text-2xl font-bold text-primary-700">
+                <div className="grid grid-cols-3 gap-2 md:gap-3">
+                  <div className="bg-primary-100 dark:bg-primary-900/30 rounded-lg p-2 md:p-3 text-center">
+                    <div className="text-xl md:text-2xl font-bold text-primary-700">
                       {todayTasks.length}
                     </div>
                     <div className="text-xs text-foreground/70">Total</div>
                   </div>
-                  <div className="bg-green-100 dark:bg-green-900/30 rounded-lg p-3 text-center">
-                    <div className="text-2xl font-bold text-green-600">
+                  <div className="bg-green-100 dark:bg-green-900/30 rounded-lg p-2 md:p-3 text-center">
+                    <div className="text-xl md:text-2xl font-bold text-green-600">
                       {completedToday}
                     </div>
                     <div className="text-xs text-foreground/70">Done</div>
                   </div>
-                  <div className="bg-orange-100 dark:bg-orange-900/30 rounded-lg p-3 text-center">
-                    <div className="text-2xl font-bold text-orange-600">
+                  <div className="bg-orange-100 dark:bg-orange-900/30 rounded-lg p-2 md:p-3 text-center">
+                    <div className="text-xl md:text-2xl font-bold text-orange-600">
                       {pendingToday}
                     </div>
                     <div className="text-xs text-foreground/70">Pending</div>
@@ -174,7 +174,7 @@ const HomeSection = () => {
                   {todayTasks.map((task) => (
                     <div
                       key={task.id}
-                      className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ${
+                      className={`flex items-center gap-2 md:gap-3 p-2.5 md:p-3 rounded-lg border transition-all duration-200 ${
                         task.completed
                           ? "bg-success-600/5 border-success-600/20"
                           : "bg-background border-border hover:border-primary-500"

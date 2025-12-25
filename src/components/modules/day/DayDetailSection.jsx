@@ -133,52 +133,60 @@ const DayDetailSection = ({ date }) => {
   ];
 
   return (
-    <section className="w-full py-8 md:py-12">
-      <div className="container mx-auto px-4 max-w-7xl">
+    <section className="w-full py-6 md:py-8 lg:py-12">
+      <div className="container mx-auto px-3 md:px-4 max-w-7xl">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 md:mb-8">
           {/* Date Header */}
-          <div className="text-center mb-6">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Calendar className="w-8 h-8 text-primary-700" />
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-linear-to-r from-primary-700 to-primary-500 bg-clip-text text-transparent leading-tight">
+          <div className="text-center mb-4 md:mb-6">
+            <div className="flex items-center justify-center gap-2 md:gap-3 mb-3 md:mb-4">
+              <Calendar className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 text-primary-700" />
+              <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold bg-linear-to-r from-primary-700 to-primary-500 bg-clip-text text-transparent leading-tight">
                 {formatDateForDisplay(date)}
               </h1>
             </div>
           </div>
 
           {/* Stats Overview */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-background border border-border rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-foreground">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 lg:gap-4 mb-4 md:mb-6">
+            <div className="bg-background border border-border rounded-lg p-2.5 md:p-3 lg:p-4 text-center">
+              <div className="text-xl md:text-2xl font-bold text-foreground">
                 {totalTasks}
               </div>
-              <div className="text-sm text-foreground/70">Total Tasks</div>
+              <div className="text-xs md:text-sm text-foreground/70">
+                Total Tasks
+              </div>
             </div>
-            <div className="bg-background border border-border rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-green-600">
+            <div className="bg-background border border-border rounded-lg p-2.5 md:p-3 lg:p-4 text-center">
+              <div className="text-xl md:text-2xl font-bold text-green-600">
                 {completedTasks}
               </div>
-              <div className="text-sm text-foreground/70">Completed</div>
+              <div className="text-xs md:text-sm text-foreground/70">
+                Completed
+              </div>
             </div>
-            <div className="bg-background border border-border rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-orange-600">
+            <div className="bg-background border border-border rounded-lg p-2.5 md:p-3 lg:p-4 text-center">
+              <div className="text-xl md:text-2xl font-bold text-orange-600">
                 {pendingTasks}
               </div>
-              <div className="text-sm text-foreground/70">Pending</div>
+              <div className="text-xs md:text-sm text-foreground/70">
+                Pending
+              </div>
             </div>
-            <div className="bg-background border border-border rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-primary-700">
+            <div className="bg-background border border-border rounded-lg p-2.5 md:p-3 lg:p-4 text-center">
+              <div className="text-xl md:text-2xl font-bold text-primary-700">
                 {completionRate}%
               </div>
-              <div className="text-sm text-foreground/70">Progress</div>
+              <div className="text-xs md:text-sm text-foreground/70">
+                Progress
+              </div>
             </div>
           </div>
 
           {/* Action Bar */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-between items-center">
             {/* Filter Buttons */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 md:gap-2">
               {filterOptions.map((option) => (
                 <Button
                   key={option.value}
@@ -187,7 +195,7 @@ const DayDetailSection = ({ date }) => {
                   }
                   size="sm"
                   onClick={() => setPriorityFilter(option.value)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm px-2 md:px-3"
                 >
                   <Filter className="w-3 h-3" />
                   {option.label}
@@ -198,7 +206,10 @@ const DayDetailSection = ({ date }) => {
               ))}
             </div>
 
-            <Button onClick={handleAddTask} className="flex items-center gap-2">
+            <Button
+              onClick={handleAddTask}
+              className="flex items-center gap-2 w-full sm:w-auto"
+            >
               <Plus className="w-4 h-4" />
               Add Task
             </Button>
@@ -206,12 +217,12 @@ const DayDetailSection = ({ date }) => {
         </div>
 
         {/* Content Area */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
           {/* Main Content */}
           <div className="lg:col-span-3">
             {filteredTasks.length === 0 ? (
-              <div className="bg-background border border-border rounded-xl shadow-sm p-8">
-                <div className="text-center py-12">
+              <div className="bg-background border border-border rounded-xl shadow-sm p-6 md:p-8">
+                <div className="text-center py-8 md:py-12">
                   <Calendar className="w-16 h-16 mx-auto mb-4 text-foreground/30" />
                   <h3 className="text-lg font-medium text-foreground/70 mb-2">
                     {priorityFilter === "all"
@@ -228,7 +239,7 @@ const DayDetailSection = ({ date }) => {
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 md:gap-4">
                 {filteredTasks.map((task) => {
                   const priorityConfig = getPriorityConfig(task.priority);
 
@@ -236,7 +247,7 @@ const DayDetailSection = ({ date }) => {
                     <div
                       key={task.id}
                       className={`
-                        bg-background border rounded-xl shadow-sm p-6 transition-all duration-200
+                        bg-background border rounded-xl shadow-sm p-4 md:p-5 lg:p-6 transition-all duration-200
                         ${
                           task.completed
                             ? "opacity-75 bg-success-600/5 border-success-600/20"
@@ -244,7 +255,8 @@ const DayDetailSection = ({ date }) => {
                         }
                       `}
                     >
-                      <div className="flex items-start gap-4">
+                      {/* Top Section: Checkbox, Title, Delete Button */}
+                      <div className="flex items-center gap-3 md:gap-4 mb-3">
                         {/* Checkbox */}
                         <button
                           onClick={() => handleToggleTask(task.id)}
@@ -260,73 +272,61 @@ const DayDetailSection = ({ date }) => {
                           {task.completed && <Check className="w-4 h-4" />}
                         </button>
 
-                        {/* Task Content */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1">
-                              <h3
-                                className={`
-                                text-lg font-semibold transition-all duration-200
-                                ${
-                                  task.completed
-                                    ? "text-foreground/60 line-through"
-                                    : "text-foreground"
-                                }
-                              `}
-                              >
-                                {task.title}
-                              </h3>
+                        {/* Task Title */}
+                        <h3
+                          className={`
+                            flex-1 text-base md:text-lg font-semibold transition-all duration-200
+                            ${
+                              task.completed
+                                ? "text-foreground/60 line-through"
+                                : "text-foreground"
+                            }
+                          `}
+                        >
+                          {task.title}
+                        </h3>
 
-                              {task.description && (
-                                <p
-                                  className={`
-                                  text-foreground/70 mt-2 transition-all duration-200
-                                  ${
-                                    task.completed
-                                      ? "line-through opacity-60"
-                                      : ""
-                                  }
-                                `}
-                                >
-                                  {task.description}
-                                </p>
-                              )}
+                        {/* Delete Button */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteClick(task)}
+                          className="shrink-0 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
 
-                              <div className="flex items-center gap-4 mt-3">
-                                {/* Priority Badge */}
-                                <div
-                                  className={`
-                                  inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium
-                                  ${priorityConfig.bgColor} ${priorityConfig.color}
-                                `}
-                                >
-                                  <Flag className="w-3 h-3" />
-                                  {task.priority} priority
-                                </div>
+                      {/* Task Description (if exists) */}
+                      {task.description && (
+                        <p
+                          className={`
+                            text-sm md:text-base text-foreground/70 mb-3 transition-all duration-200
+                            ${task.completed ? "line-through opacity-60" : ""}
+                          `}
+                        >
+                          {task.description}
+                        </p>
+                      )}
 
-                                {/* Created Date */}
-                                <span className="text-xs text-foreground/50">
-                                  Created:{" "}
-                                  {new Date(task.createdAt).toLocaleDateString(
-                                    "en-US"
-                                  )}
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* Actions */}
-                            <div className="flex items-center gap-2">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleDeleteClick(task)}
-                                className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </div>
+                      {/* Bottom Section: Priority Badge and Created Date */}
+                      <div className="flex items-center gap-3 md:gap-4">
+                        {/* Priority Badge */}
+                        <div
+                          className={`
+                            inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium
+                            ${priorityConfig.bgColor} ${priorityConfig.color}
+                          `}
+                        >
+                          <Flag className="w-3 h-3" />
+                          {task.priority} priority
                         </div>
+
+                        {/* Created Date */}
+                        <span className="text-xs text-foreground/50">
+                          Created:{" "}
+                          {new Date(task.createdAt).toLocaleDateString("en-US")}
+                        </span>
                       </div>
                     </div>
                   );
@@ -336,13 +336,13 @@ const DayDetailSection = ({ date }) => {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {/* Progress Chart */}
-            <div className="bg-background border border-border rounded-xl shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">
+            <div className="bg-background border border-border rounded-xl shadow-sm p-4 md:p-5 lg:p-6">
+              <h3 className="text-base md:text-lg font-semibold text-foreground mb-3 md:mb-4">
                 Progress
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-foreground/70">
                     Completion Rate
@@ -361,8 +361,8 @@ const DayDetailSection = ({ date }) => {
             </div>
 
             {/* Priority Breakdown */}
-            <div className="bg-background border border-border rounded-xl shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">
+            <div className="bg-background border border-border rounded-xl shadow-sm p-4 md:p-5 lg:p-6">
+              <h3 className="text-base md:text-lg font-semibold text-foreground mb-3 md:mb-4">
                 Priority Breakdown
               </h3>
               <div className="space-y-3">

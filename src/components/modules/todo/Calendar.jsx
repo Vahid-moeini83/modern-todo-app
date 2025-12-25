@@ -109,16 +109,16 @@ const Calendar = () => {
       </div>
 
       {/* Calendar Container */}
-      <div className="bg-linear-to-br from-background to-primary-100/20 dark:to-primary-900/10 border border-border/50 rounded-2xl shadow-lg backdrop-blur-sm p-6 md:p-10">
+      <div className="bg-linear-to-br from-background to-primary-100/20 dark:to-primary-900/10 border border-border/50 rounded-2xl shadow-lg backdrop-blur-sm p-3 sm:p-6 md:p-10">
         {/* Calendar Header */}
         <div className="flex items-center justify-between mb-8">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigateMonth(-1)}
-            className="hover:bg-primary-100 dark:hover:bg-primary-900 h-12 w-12 rounded-full transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
+            className="hover:bg-primary-100 dark:hover:bg-primary-900 sm:h-12 w-10 h-10 sm:w-12 rounded-full transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="sm:w-6 sm:h-6 w-4 h-4" />
           </Button>
 
           <div className="text-center">
@@ -131,14 +131,14 @@ const Calendar = () => {
             variant="ghost"
             size="icon"
             onClick={() => navigateMonth(1)}
-            className="hover:bg-primary-100 dark:hover:bg-primary-900 h-12 w-12 rounded-full transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
+            className="hover:bg-primary-100 dark:hover:bg-primary-900 sm:h-12 w-10 h-10 sm:w-12 rounded-full transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="sm:w-6 sm:h-6 w-4 h-4" />
           </Button>
         </div>
 
         {/* Week Days Header */}
-        <div className="grid grid-cols-7 gap-2 md:gap-4 mb-6">
+        <div className="grid grid-cols-7 gap-2 md:gap-4 mb-2 md:mb-6">
           {weekDays.map((day) => (
             <div
               key={day}
@@ -150,7 +150,7 @@ const Calendar = () => {
         </div>
 
         {/* Calendar Grid - Fixed height to prevent jumping */}
-        <div className="grid grid-cols-7 gap-2 md:gap-4 min-h-[300px] md:min-h-[400px] lg:min-h-[480px]">
+        <div className="grid grid-cols-7 gap-1 md:gap-4 min-h-[300px] md:min-h-[400px] lg:min-h-[480px]">
           {days.map((dayObj) => {
             const { day, index } = dayObj;
 
@@ -202,9 +202,9 @@ const Calendar = () => {
                   {day}
                 </span>
 
-                {/* Priority Task Indicators - Left Side Vertical */}
+                {/* Priority Task Indicators - Responsive Layout */}
                 {hasTasks && (
-                  <div className="absolute left-1 bottom-1 flex flex-col gap-0.5 md:gap-1">
+                  <div className="absolute left-1/2 -translate-x-1/2 bottom-1 flex flex-row gap-0.5 md:flex-col md:left-1 md:translate-x-0 md:gap-1">
                     {["high", "medium", "low"].map((priority) => {
                       const count = taskStats[priority];
                       if (count === 0) return null;
@@ -219,8 +219,10 @@ const Calendar = () => {
                           hover:scale-110 border border-white/20
                           ${todayClass ? "ring-1 ring-white/50" : ""}
                           
-                          // Mobile: Just dots
-                          w-2 h-2 md:w-4 md:h-4 lg:w-5 lg:h-5
+                          // Mobile: Horizontal dots
+                          w-2 h-2 
+                          // Medium: Vertical with count
+                          md:w-4 md:h-4 lg:w-5 lg:h-5
                           md:flex md:items-center md:justify-center
                         `}
                           title={`${count} ${priority} priority task${
