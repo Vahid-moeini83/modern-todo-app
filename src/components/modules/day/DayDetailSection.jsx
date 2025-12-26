@@ -4,7 +4,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Calendar, Plus, Filter, Check, Trash2, Flag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ConfirmModal } from "@/components/ui/modal";
+import { ConfirmModal, TaskDetailModal } from "@/components/ui/modal";
 import { TaskModal } from "@/components/modules/todo";
 import { usePublicStore } from "@/app/store/publicStore";
 
@@ -12,6 +12,8 @@ const DayDetailSection = ({ date }) => {
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState(null);
+  const [taskDetailOpen, setTaskDetailOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
 
   // Use direct store selector for reactivity - این باعث میشه کامپوننت به تغییرات واکنش نشون بده
   const tasks = usePublicStore((state) => state.tasks);
@@ -99,6 +101,16 @@ const DayDetailSection = ({ date }) => {
   const handleCancelDelete = () => {
     setDeleteConfirmOpen(false);
     setTaskToDelete(null);
+  };
+
+  const handleTaskClick = (task) => {
+    setSelectedTask(task);
+    setTaskDetailOpen(true);
+  };
+
+  const handleCloseTaskDetail = () => {
+    setTaskDetailOpen(false);
+    setSelectedTask(null);
   };
 
   const getPriorityConfig = (priority) => {
@@ -246,8 +258,9 @@ const DayDetailSection = ({ date }) => {
                   return (
                     <div
                       key={task.id}
+                      onClick={() => handleTaskClick(task)}
                       className={`
-                        bg-background border rounded-xl shadow-sm p-4 md:p-5 lg:p-6 transition-all duration-200
+                        bg-background border rounded-xl shadow-sm p-4 md:p-5 lg:p-6 transition-all duration-200 cursor-pointer
                         ${
                           task.completed
                             ? "opacity-75 bg-success-600/5 border-success-600/20"
@@ -259,7 +272,10 @@ const DayDetailSection = ({ date }) => {
                       <div className="flex items-center gap-3 md:gap-4 mb-3">
                         {/* Checkbox */}
                         <button
-                          onClick={() => handleToggleTask(task.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleTask(task.id);
+                          }}
                           className={`
                             shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200
                             ${
@@ -290,18 +306,21 @@ const DayDetailSection = ({ date }) => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDeleteClick(task)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteClick(task);
+                          }}
                           className="shrink-0 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
 
-                      {/* Task Description (if exists) */}
+                      {/* Task Description (if exists) - Limited to 1 line */}
                       {task.description && (
                         <p
                           className={`
-                            text-sm md:text-base text-foreground/70 mb-3 transition-all duration-200
+                            text-sm md:text-base text-foreground/70 mb-3 transition-all duration-200 line-clamp-1
                             ${task.completed ? "line-through opacity-60" : ""}
                           `}
                         >
@@ -408,6 +427,13 @@ const DayDetailSection = ({ date }) => {
         }
         confirmText="Delete"
         cancelText="Cancel"
+      />
+
+      {/* Task Detail Modal */}
+      <TaskDetailModal
+        isOpen={taskDetailOpen}
+        onClose={handleCloseTaskDetail}
+        task={selectedTask}
       />
 
       {/* Task Modal */}
