@@ -2,9 +2,21 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Calendar, Plus, Filter, Check, Trash2, Flag } from "lucide-react";
+import {
+  Calendar,
+  Plus,
+  Filter,
+  Check,
+  Trash2,
+  Flag,
+  Edit,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ConfirmModal, TaskDetailModal } from "@/components/ui/modal";
+import {
+  ConfirmModal,
+  TaskDetailModal,
+  EditTaskModal,
+} from "@/components/ui/modal";
 import { TaskModal } from "@/components/modules/todo";
 import { usePublicStore } from "@/app/store/publicStore";
 
@@ -14,12 +26,15 @@ const DayDetailSection = ({ date }) => {
   const [taskToDelete, setTaskToDelete] = useState(null);
   const [taskDetailOpen, setTaskDetailOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [editTaskOpen, setEditTaskOpen] = useState(false);
+  const [taskToEdit, setTaskToEdit] = useState(null);
 
   // Use direct store selector for reactivity - این باعث میشه کامپوننت به تغییرات واکنش نشون بده
   const tasks = usePublicStore((state) => state.tasks);
   const openModal = usePublicStore((state) => state.openModal);
   const toggleTask = usePublicStore((state) => state.toggleTask);
   const deleteTask = usePublicStore((state) => state.deleteTask);
+  const updateTask = usePublicStore((state) => state.updateTask);
 
   // Get tasks for this specific date from the reactive tasks object
   const allTasks = tasks[date] || [];
@@ -111,6 +126,27 @@ const DayDetailSection = ({ date }) => {
   const handleCloseTaskDetail = () => {
     setTaskDetailOpen(false);
     setSelectedTask(null);
+  };
+
+  const handleEditClick = (task) => {
+    setTaskToEdit(task);
+    setEditTaskOpen(true);
+  };
+
+  const handleSaveEdit = (updatedTask) => {
+    updateTask(date, updatedTask.id, {
+      title: updatedTask.title,
+      description: updatedTask.description,
+      priority: updatedTask.priority,
+    });
+    toast.success("Task updated successfully!");
+    setEditTaskOpen(false);
+    setTaskToEdit(null);
+  };
+
+  const handleCloseEdit = () => {
+    setEditTaskOpen(false);
+    setTaskToEdit(null);
   };
 
   const getPriorityConfig = (priority) => {
@@ -220,7 +256,7 @@ const DayDetailSection = ({ date }) => {
 
             <Button
               onClick={handleAddTask}
-              className="flex items-center gap-2 w-full sm:w-auto"
+              className="flex items-center gap-1 w-full sm:w-auto text-sm lg:text-base"
             >
               <Plus className="w-4 h-4" />
               Add Task
@@ -251,7 +287,7 @@ const DayDetailSection = ({ date }) => {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 md:gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 {filteredTasks.map((task) => {
                   const priorityConfig = getPriorityConfig(task.priority);
 
@@ -268,8 +304,8 @@ const DayDetailSection = ({ date }) => {
                         }
                       `}
                     >
-                      {/* Top Section: Checkbox, Title, Delete Button */}
-                      <div className="flex items-center gap-3 md:gap-4 mb-3">
+                      {/* Top Section: Checkbox, Title, Edit & Delete Buttons */}
+                      <div className="flex items-center gap-2 md:gap-3 mb-3">
                         {/* Checkbox */}
                         <button
                           onClick={(e) => {
@@ -288,10 +324,10 @@ const DayDetailSection = ({ date }) => {
                           {task.completed && <Check className="w-4 h-4" />}
                         </button>
 
-                        {/* Task Title */}
+                        {/* Task Title - Limited to 1 line */}
                         <h3
                           className={`
-                            flex-1 text-base md:text-lg font-semibold transition-all duration-200
+                            flex-1 text-base md:text-lg font-semibold transition-all duration-200 line-clamp-1
                             ${
                               task.completed
                                 ? "text-foreground/60 line-through"
@@ -302,18 +338,30 @@ const DayDetailSection = ({ date }) => {
                           {task.title}
                         </h3>
 
-                        {/* Delete Button */}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteClick(task);
-                          }}
-                          className="shrink-0 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        {/* Action Buttons Group */}
+                        <div className="flex items-center gap-1">
+                          {/* Edit Button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditClick(task);
+                            }}
+                            className="shrink-0 p-2 rounded-md text-primary-700 hover:text-primary-800 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all duration-200"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+
+                          {/* Delete Button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteClick(task);
+                            }}
+                            className="shrink-0 p-2 rounded-md text-red-500 hover:text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 transition-all duration-200"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
 
                       {/* Task Description (if exists) - Limited to 1 line */}
@@ -434,6 +482,14 @@ const DayDetailSection = ({ date }) => {
         isOpen={taskDetailOpen}
         onClose={handleCloseTaskDetail}
         task={selectedTask}
+      />
+
+      {/* Edit Task Modal */}
+      <EditTaskModal
+        isOpen={editTaskOpen}
+        onClose={handleCloseEdit}
+        task={taskToEdit}
+        onSave={handleSaveEdit}
       />
 
       {/* Task Modal */}

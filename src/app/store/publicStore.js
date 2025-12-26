@@ -58,6 +58,17 @@ export const usePublicStore = create(
           },
         })),
 
+      updateTask: (date, taskId, updatedData) =>
+        set((state) => ({
+          tasks: {
+            ...state.tasks,
+            [date]:
+              state.tasks[date]?.map((task) =>
+                task.id === taskId ? { ...task, ...updatedData } : task
+              ) || [],
+          },
+        })),
+
       // Modal Actions
       openModal: (date = null) =>
         set({ isModalOpen: true, selectedDate: date }),
